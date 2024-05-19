@@ -7,7 +7,8 @@ class Category(BaseModel):
     id: int = Field(default=None, title="Category ID")
     name: str = Field(default=None, title="Category Name")
     description: str = Field(default=None, title="Category Description")
-    id_company: int = Field(default=None, title="Company ID")
+    id_company: int = Field(default=None, title="ID of the branch")
+    status: bool = Field(default=True, title="Category status")
 
     class Config:
         json_schema_extra = {

@@ -22,5 +22,6 @@ class Branch(Base):
     Rproduct = relationship("Product", back_populates="Rbranch")
     Rproductxsupplier = relationship("Productxsupplier", back_populates="Rbranch")
     Rproductxpart = relationship("Productxpart", back_populates="Rbranch")
+    Rcategory = relationship("Category", back_populates="Rbranch")
 
 

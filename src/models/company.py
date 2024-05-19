@@ -12,5 +12,4 @@ class Company(Base):
     status = Column(Boolean, nullable=False, default=True )
     Rcity = relationship("City", back_populates="Rcompany")
     Rbranch = relationship("Branch", back_populates="Rcompany")
-    Rcategory = relationship("Category", back_populates="Rcompany")
     Rclient = relationship("Client", back_populates="Rcompany")
