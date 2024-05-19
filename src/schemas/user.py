@@ -4,7 +4,7 @@ from fastapi import HTTPException, status
 
 class User(BaseModel):
 
-    identification: int = Field(default=None, title="User identification")
+    identification: str = Field(default=None, title="User identification")
     name: str = Field(default=None, title="User Name")
     lastname: str = Field(default=None, title="User lastname")
     username: str = Field(default=None, tittle="Username of the user")

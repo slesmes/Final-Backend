@@ -4,7 +4,7 @@ from fastapi import HTTPException, status
 
 class Client(BaseModel):
 
-    identification: int = Field(default=None, title="Client identification")
+    identification: str = Field(default=None, title="Client identification")
     name: str = Field(default=None, title="Client Name")
     lastname: str = Field(default=None, title="Client lastname")
     status: bool = Field(default=True, title="Client Status")
