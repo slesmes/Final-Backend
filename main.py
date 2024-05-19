@@ -7,6 +7,8 @@ from src.middlewares.error_handler import ErrorHandler
 from src.config.database import Base, engine
 from src.routers.country import country_router
 from src.routers.department import department_router
+from src.routers.city import city_router
+from src.routers.company import company_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -16,7 +18,7 @@ tags_metadata = [
         "description": "country handling endpoints",
     },
     {
-        "name": "User",
+        "name": "user",
         "description": "User handling endpoints",
     },
     {
@@ -26,12 +28,22 @@ tags_metadata = [
     {
         "name": "department",
         "description": "department handling endpoints",
+    },
+    {
+        "name": "city",
+        "description": "city handling endpoints",
+    },
+    {
+        "name": "company",
+        "description": "company handling endpoints",
     }
 ]
 app = FastAPI(openapi_tags=tags_metadata)
 
-app.include_router(prefix="/api/v1/category", router=country_router)
+app.include_router(prefix="/api/v1/country", router=country_router)
 app.include_router(prefix="/api/v1/department", router=department_router)
+app.include_router(prefix="/api/v1/city", router=city_router)
+app.include_router(prefix="/api/v1/company", router=company_router)
 
 app.add_middleware(ErrorHandler)
 

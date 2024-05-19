@@ -8,4 +8,4 @@ class Department(Base):
     name = Column(String(length=100), nullable=False, unique=True)
     id_country = Column(Integer, ForeignKey('country.id'), nullable=False)
     Rcountry = relationship("Country", back_populates="Rdepartment")
-Rcity = relationship("City", back_populates="Rdepartment")
+    Rcity = relationship("City", back_populates="Rdepartment")
