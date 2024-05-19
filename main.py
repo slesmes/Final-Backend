@@ -3,13 +3,37 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel, Field
 from typing import Any, Optional, List
 
+from src.middlewares.error_handler import ErrorHandler
 from src.config.database import Base, engine
+from src.routers.country import country_router
+from src.routers.department import department_router
 
 Base.metadata.create_all(bind=engine)
 
+tags_metadata = [
+    {
+        "name": "country",
+        "description": "country handling endpoints",
+    },
+    {
+        "name": "User",
+        "description": "User handling endpoints",
+    },
+    {
+        "name": "auth",
+        "description": "User's authentication",
+    },
+    {
+        "name": "department",
+        "description": "department handling endpoints",
+    }
+]
+app = FastAPI(openapi_tags=tags_metadata)
 
+app.include_router(prefix="/api/v1/category", router=country_router)
+app.include_router(prefix="/api/v1/department", router=department_router)
 
-app = FastAPI()
+app.add_middleware(ErrorHandler)
 
 app.title = "STOCK MASTER"
 app.summary = "API with FastAPI and Python"

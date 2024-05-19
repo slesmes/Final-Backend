@@ -11,7 +11,7 @@ class Department(BaseModel):
     class Config:
         json_schema_extra = {
             "example": {
-                "name": "Example Country",
+                "name": "Example name",
                 "id_country": 1,
             }
         }
