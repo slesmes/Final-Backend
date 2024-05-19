@@ -6,7 +6,7 @@ class companyRepository():
     def __init__(self, db) -> None:
         self.db = db
 
-    def get_all_countries(self) -> List[Company]:
+    def get_all_companies(self) -> List[Company]:
         query = self.db.query(companyModel)
         return query.all()
 

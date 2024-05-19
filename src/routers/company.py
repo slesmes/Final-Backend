@@ -14,9 +14,9 @@ company_router = APIRouter()
     tags=['company'],
     response_model=List[Company],
     description="Returns all company ")
-def get_all_countries() -> List[Company]:
+def get_all_companies() -> List[Company]:
     db = SessionLocal()
-    result = companyRepository(db).get_all_countries()
+    result = companyRepository(db).get_all_companies()
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
 
 @company_router.get('/{id}',

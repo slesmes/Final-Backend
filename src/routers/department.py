@@ -14,9 +14,9 @@ department_router = APIRouter()
     tags=['department'],
     response_model=List[Department],
     description="Returns all department ")
-def get_all_countries() -> List[Department]:
+def get_all_departments() -> List[Department]:
     db = SessionLocal()
-    result = DepartmentRepository(db).get_all_countries()
+    result = DepartmentRepository(db).get_all_departments()
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
 
 @department_router.get('/{id}',

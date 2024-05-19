@@ -6,7 +6,7 @@ class DepartmentRepository():
     def __init__(self, db) -> None:
         self.db = db
 
-    def get_all_countries(self) -> List[Department]:
+    def get_all_departments(self) -> List[Department]:
         query = self.db.query(departmentModel)
         return query.all()
 

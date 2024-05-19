@@ -6,7 +6,7 @@ class cityRepository():
     def __init__(self, db) -> None:
         self.db = db
 
-    def get_all_countries(self) -> List[City]:
+    def get_all_cities(self) -> List[City]:
         query = self.db.query(cityModel)
         return query.all()
 

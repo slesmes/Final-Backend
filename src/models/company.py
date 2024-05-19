@@ -11,5 +11,5 @@ class Company(Base):
     id_city = Column(Integer, ForeignKey('city.id'), nullable=False )
     status = Column(Boolean, nullable=False, default=True )
     Rcity = relationship("City", back_populates="Rcompany")
-Rbranch = relationship("Branch", back_populates="Rcompany")
-Rclient = relationship("Client", back_populates="Rcompany")
+    Rbranch = relationship("Branch", back_populates="Rcompany")
+    Rclient = relationship("Client", back_populates="Rcompany")

@@ -10,5 +10,5 @@ class City(Base):
     postal_code = Column(String(length=100), nullable=False )
     Rdepartment = relationship("Department", back_populates="Rcity")
     Rcompany = relationship("Company", back_populates="Rcity")
-Rbranch = relationship("Branch", back_populates="Rcity")
-Rclient = relationship("Client", back_populates="Rcity")
+    Rbranch = relationship("Branch", back_populates="Rcity")
+    Rclient = relationship("Client", back_populates="Rcity")

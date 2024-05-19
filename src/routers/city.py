@@ -14,9 +14,9 @@ city_router = APIRouter()
     tags=['city'],
     response_model=List[City],
     description="Returns all city ")
-def get_all_countries() -> List[City]:
+def get_all_cities() -> List[City]:
     db = SessionLocal()
-    result = cityRepository(db).get_all_countries()
+    result = cityRepository(db).get_all_cities()
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
 
 @city_router.get('/{id}',
