@@ -1,4 +1,6 @@
 from typing import List
+
+from fastapi import HTTPException
 from src.schemas.country import Country
 from src.models.country import Country as CountryModel
 
@@ -20,6 +22,17 @@ class CountryRepository():
         self.db.commit()
         self.db.refresh(new_country)
         return new_country
+    
+    def update_country(self, id:str,country:Country)-> dict:
+        Updatecountry: Country= self.db.query(CountryModel).filter(CountryModel.id == id).first()  
+        if Updatecountry is None:
+            raise HTTPException(status_code=404, detail="Item not found")
+        
+        Updatecountry.name = country.name
+
+        self.db.commit()
+        self.db.refresh(Updatecountry)
+        return Updatecountry
     
     def delete_country(self, id: int) -> dict:
         element: Country = self.db.query(CountryModel).filter(CountryModel.id == id).first()

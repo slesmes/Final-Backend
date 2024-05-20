@@ -21,3 +21,7 @@ class Bill(BaseModel):
                 "id_branch": 1,
             }
         }
+
+
+
+

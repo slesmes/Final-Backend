@@ -2,11 +2,14 @@ from fastapi import APIRouter
 from src.schemas.user import User
 from fastapi import FastAPI, Body, Query, Path
 from fastapi.responses import HTMLResponse, JSONResponse
-from typing import Any, Optional, List
+from typing import Annotated, Any, Optional, List
 from src.config.database import SessionLocal
 from src.models.user import User as userModel
 from fastapi.encoders import jsonable_encoder
 from src.repositories.user import UserRepository
+from src.auth.has_access import security
+from fastapi.security import HTTPAuthorizationCredentials
+from fastapi import APIRouter, Body, Depends, Query, Path, Security, status
 user_router = APIRouter()
 
 
@@ -14,7 +17,7 @@ user_router = APIRouter()
     tags=['user'],
     response_model=List[User],
     description="Returns all user ")
-def get_all_users() -> List[User]:
+def get_all_users(credentials: HTTPAuthorizationCredentials = Security(security)) -> List[User]:
     db = SessionLocal()
     result = UserRepository(db).get_all_Users()
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
@@ -23,7 +26,7 @@ def get_all_users() -> List[User]:
     tags=['user'],
     response_model=User,
     description="Returns data of one specific user")
-def get_user_by_id(id: int = Path(ge=0, le=5000)) -> User:
+def get_user_by_id(id: int = Path(ge=0, le=5000),credentials: HTTPAuthorizationCredentials = Security(security)) -> User:
     db = SessionLocal()
     element = UserRepository(db).get_user(id)
     if not element:
@@ -34,23 +37,27 @@ def get_user_by_id(id: int = Path(ge=0, le=5000)) -> User:
     
     return JSONResponse(content=jsonable_encoder(element),status_code=200)
 
-@user_router.post('/',
-    tags=['user'],
+
+@user_router.put('{id}', tags=['user'],
     response_model=dict,
-    description="Creates a new user")
-def create_user(user: User) -> dict:
-    db = SessionLocal()
-    new_user = UserRepository(db).create_User(user)
-    return JSONResponse(content={
-        "message": "The user was successfully created",
-        "data": jsonable_encoder(new_user)
-    }, status_code=201)
+    description="Update a new user")
+def update_user(credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)],id:int = Path(ge=1), user: User = Body()) -> dict:
+    db= SessionLocal()
+    update_user = UserRepository(db).update_user(id,user)
+    return JSONResponse(
+        content={        
+        "message": "The user was successfully updated",        
+        "data": jsonable_encoder(update_user)    
+        }, 
+        status_code=status.HTTP_201_CREATED
+    )
+
 
 @user_router.delete('/{id}',
     tags=['user'],
     response_model=dict,
     description="Removes specific user")
-def remove_user(id: int = Path(ge=1)) -> dict:
+def remove_user(id: int = Path(ge=1), credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
     element = UserRepository(db).get_user(id)
     if not element:

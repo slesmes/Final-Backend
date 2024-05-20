@@ -2,11 +2,14 @@ from fastapi import APIRouter
 from src.schemas.productXpart import ProductXpart
 from fastapi import FastAPI, Body, Query, Path
 from fastapi.responses import HTMLResponse, JSONResponse
-from typing import Any, Optional, List
+from typing import Annotated, Any, Optional, List
 from src.config.database import SessionLocal
 from src.models.productXpart import Productxpart as productXpartModel
 from fastapi.encoders import jsonable_encoder
 from src.repositories.productXpart import productXpartRepository
+from src.auth.has_access import security
+from fastapi.security import HTTPAuthorizationCredentials
+from fastapi import APIRouter, Body, Depends, Query, Path, Security, status
 productXpart_router = APIRouter()
 
 
@@ -14,7 +17,7 @@ productXpart_router = APIRouter()
     tags=['productXpart'],
     response_model=List[ProductXpart],
     description="Returns all productXpart ")
-def get_all_productXparts() -> List[ProductXpart]:
+def get_all_productXparts(credentials: HTTPAuthorizationCredentials = Security(security)) -> List[ProductXpart]:
     db = SessionLocal()
     result = productXpartRepository(db).get_all_productXparts()
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
@@ -23,7 +26,7 @@ def get_all_productXparts() -> List[ProductXpart]:
     tags=['productXpart'],
     response_model=ProductXpart,
     description="Returns data of one specific productXpart")
-def get_productXpart_by_id(id: int = Path(ge=0, le=5000)) -> ProductXpart:
+def get_productXpart_by_id(id: int = Path(ge=0, le=5000), credentials: HTTPAuthorizationCredentials = Security(security)) -> ProductXpart:
     db = SessionLocal()
     element = productXpartRepository(db).get_productXpart(id)
     if not element:
@@ -38,7 +41,7 @@ def get_productXpart_by_id(id: int = Path(ge=0, le=5000)) -> ProductXpart:
     tags=['productXpart'],
     response_model=dict,
     description="Creates a new productXpart")
-def create_productXpart(productXpart: ProductXpart) -> dict:
+def create_productXpart(productXpart: ProductXpart, credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
     new_productXpart = productXpartRepository(db).create_productXpart(productXpart)
     return JSONResponse(content={
@@ -46,11 +49,26 @@ def create_productXpart(productXpart: ProductXpart) -> dict:
         "data": jsonable_encoder(new_productXpart)
     }, status_code=201)
 
+@productXpart_router.put('{id}', tags=['productXpart'],
+    response_model=dict,
+    description="Update a new part")
+def update_productXpart(credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)],id:int = Path(ge=1), productXpart: ProductXpart = Body()) -> dict:
+    db= SessionLocal()
+    update_productXpart = productXpartRepository(db).update_productXPart(id,productXpart)
+    return JSONResponse(
+        content={        
+        "message": "The productXpart was successfully updated",        
+        "data": jsonable_encoder(update_productXpart)    
+        }, 
+        status_code=status.HTTP_201_CREATED
+    )
+
+
 @productXpart_router.delete('/{id}',
     tags=['productXpart'],
     response_model=dict,
     description="Removes specific productXpart")
-def remove_productXpart(id: int = Path(ge=1)) -> dict:
+def remove_productXpart(id: int = Path(ge=1), credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
     element = productXpartRepository(db).get_productXpart(id)
     if not element:

@@ -1,4 +1,6 @@
 from typing import List
+
+from fastapi import HTTPException
 from src.schemas.sale import Sale
 from src.models.sale import Sale as saleModel
 
@@ -21,6 +23,21 @@ class saleRepository():
         self.db.refresh(new_sale)
         return new_sale
     
+    def update_sale(self, id:str,sale:Sale)-> dict:
+        Updatesale: Sale= self.db.query(saleModel).filter(saleModel.id == id).first()  
+        if Updatesale is None:
+            raise HTTPException(status_code=404, detail="Item not found")
+        
+        Updatesale.id_branch = sale.id_branch
+        Updatesale.id_bill = sale.id_bill
+        Updatesale.id_product = sale.id_product
+        Updatesale.quantity = sale.quantity
+
+
+        self.db.commit()
+        self.db.refresh(Updatesale)
+        return Updatesale
+
     def delete_sale(self, id: int) -> dict:
         element: Sale = self.db.query(saleModel).filter(saleModel.id == id).first()
         self.db.delete(element)

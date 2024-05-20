@@ -1,4 +1,6 @@
 from typing import List
+
+from fastapi import HTTPException
 from src.schemas.supplierXpart import SupplierXpart
 from src.models.supplierXpart import Supplierxpart as supplierXpartModel
 
@@ -26,6 +28,19 @@ class supplierXpartRepository():
         self.db.refresh(new_supplierXpart)
         return new_supplierXpart
     
+    def update_supplierXPart(self, id:str,supplierXpart:SupplierXpart)-> dict:
+        UpdatesupplierXpart: SupplierXpart= self.db.query(supplierXpartModel).filter(supplierXpartModel.id == id).first()  
+        if UpdatesupplierXpart is None:
+            raise HTTPException(status_code=404, detail="Item not found")
+        
+        UpdatesupplierXpart.id_part = supplierXpart.id_part
+        UpdatesupplierXpart.id_branch = supplierXpart.id_branch
+        supplierXpart.id_supplier = supplierXpart.id_supplier
+
+        self.db.commit()
+        self.db.refresh(UpdatesupplierXpart)
+        return UpdatesupplierXpart
+
     def remove_supplierXpart(self, id: int ) -> dict:
         element: SupplierXpart = self.db.query(supplierXpartModel).filter(supplierXpartModel.id == id).first()
         self.db.delete(element)
