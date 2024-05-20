@@ -16,6 +16,6 @@ class User(Base):
     id_rol = Column(Integer, ForeignKey('rol.id'),nullable=False )
     Rbranch = relationship("Branch", back_populates="Ruser")
     Rrol = relationship("Rol", back_populates="Ruser")
-Rbill = relationship("Bill", back_populates="Ruser")
+    Rbill = relationship("Bill", back_populates="Ruser")
 
 

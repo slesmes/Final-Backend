@@ -15,4 +15,4 @@ class Client(Base):
     id_city = Column(Integer, ForeignKey('city.id'), nullable=False)
     Rcompany = relationship("Company", back_populates="Rclient")
     Rcity = relationship("City", back_populates="Rclient")
-Rbill = relationship("Bill", back_populates="Rclient")
+    Rbill = relationship("Bill", back_populates="Rclient")

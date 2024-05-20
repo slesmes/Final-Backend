@@ -13,6 +13,9 @@ from src.routers.branch import branch_router
 from src.routers.client import client_router
 from src.routers.rol import rol_router
 from src.routers.user import user_router
+from src.routers.bill import bill_router
+from src.routers.product import product_router
+from src.routers.category import category_router
 
 
 Base.metadata.create_all(bind=engine)
@@ -53,6 +56,14 @@ tags_metadata = [
     {
         "name": "rol",
         "description": "rol handling endpoints",
+    },
+    {
+        "name": "product",
+        "description": "product handling endpoints",
+    },
+    {
+        "name": "category",
+        "description": "category handling endpoints",
     }
 ]
 app = FastAPI(openapi_tags=tags_metadata)
@@ -65,6 +76,9 @@ app.include_router(prefix="/api/v1/branch", router=branch_router)
 app.include_router(prefix="/api/v1/client", router=client_router)
 app.include_router(prefix="/api/v1/rol", router=rol_router)
 app.include_router(prefix="/api/v1/user", router=user_router)
+app.include_router(prefix="/api/v1/bill", router=bill_router)
+app.include_router(prefix="/api/v1/product", router=product_router)
+app.include_router(prefix="/api/v1/category", router=category_router)
 
 app.add_middleware(ErrorHandler)
 

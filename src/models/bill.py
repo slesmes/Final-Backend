@@ -13,4 +13,5 @@ class Bill(Base):
     Rclient = relationship("Client", back_populates="Rbill")
     Rbranch = relationship("Branch", back_populates="Rbill")
     Ruser = relationship("User", back_populates="Rbill")
+Rsale = relationship("Sale", back_populates="Rbill")
 
