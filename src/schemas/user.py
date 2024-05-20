@@ -18,15 +18,28 @@ class User(BaseModel):
     class Config:
         json_schema_extra = {
             "example": {
-                "identification": "Example identification",
-                "name": "Example name",
-                "lastname": "Example lastname",
-                "username": "Example username",
-                "password": "Example password",
-                "status": "true or false",
-                "email": "Example email",
-                "phone": "Example Phone",
+                "identification": "1004367716",
+                "name": "Andres",
+                "lastname": "Perez",
+                "username": "andre1438",
+                "password": "hola123",
+                "status": 1,
+                "email": "andresap2017@gmail.com",
+                "phone": "3134902138",
                 "id_branch": 1,
                 "id_rol": 1,
+            }
+        }
+
+class LoginUser(BaseModel):
+
+    username: str = Field(default=None, tittle="Username of the user")
+    password: str = Field(default=None, tittle="User Password")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "username": "Example username",
+                "password": "Example password"
             }
         }

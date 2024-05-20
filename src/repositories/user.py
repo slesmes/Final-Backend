@@ -15,8 +15,8 @@ class UserRepository():
         element = self.db.query(UserModel).filter(UserModel.id == id).first()
         return element
     
-    def get_user(self, email: str) -> User:
-        element = self.db.query(UserModel).filter(UserModel.email == email).first()
+    def get_user(self, username: str) -> User:
+        element = self.db.query(UserModel).filter(UserModel.username == username).first()
         return element
     
     def create_User(self, user: User) -> dict:

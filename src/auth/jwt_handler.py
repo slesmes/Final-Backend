@@ -28,11 +28,11 @@ class JWTHandler:
             # iat (issued at time): Time at which the JWT was issued
             "iat": datetime.now(tz=timezone.utc),
             # sub (subject): Subject of the JWT (the user)
-            "sub": user.email,
+            "sub": user.username,
             # Custom Issues
             "scope": "access_token",
-            "user.first_name": user.name,
-            "user.id": user.id,
+            "user.email": user.email,
+            "user.id": user.identification,
         }
         return jwt.encode(payload, self.secret, algorithm=self.algorithm)
     
@@ -61,6 +61,7 @@ class JWTHandler:
                     user = UserRepository.get_user(payload["sub"])
                     new_token = self.encode_token(user)
                     return new_token
+                print(payload)
                 raise HTTPException(status_code=401, detail="Invalid scope for token")
             except jwt.ExpiredSignatureError:
                 raise HTTPException(status_code=401, detail="Refresh token expired")

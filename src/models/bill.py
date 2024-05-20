@@ -15,3 +15,7 @@ class Bill(Base):
     Ruser = relationship("User", back_populates="Rbill")
     Rsale = relationship("Sale", back_populates="Rbill")
 
+
+
+
+

@@ -23,6 +23,7 @@ from src.routers.sale import sale_router
 from src.routers.part import part_router
 from src.routers.supplierXpart import supplierXpart_router
 from src.routers.produtcxpart import productXpart_router
+from src.routers.auth import auth_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -120,6 +121,8 @@ app.include_router(prefix="/api/v1/sale", router=sale_router)
 app.include_router(prefix="/api/v1/part", router=part_router)
 app.include_router(prefix="/api/v1/supplierXpart", router=supplierXpart_router)
 app.include_router(prefix="/api/v1/productXpart", router=productXpart_router)
+app.include_router(prefix="/api/v1/auth", router=auth_router)
+
 
 app.add_middleware(ErrorHandler)
 
