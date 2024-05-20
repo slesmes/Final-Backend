@@ -23,7 +23,7 @@ class Branch(Base):
     Rsale = relationship("Sale", back_populates="Rbranch")
     Rpart = relationship("Part", back_populates="Rbranch")
     Rsupplierxpart = relationship("Supplierxpart", back_populates="Rbranch")
-Rproductxpart = relationship("Productxpart", back_populates="Rbranch")
+    Rproductxpart = relationship("Productxpart", back_populates="Rbranch")
 
 
 
