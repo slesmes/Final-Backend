@@ -1,4 +1,6 @@
 from typing import List
+
+from fastapi import HTTPException
 from src.schemas.company import Company
 from src.models.company import Company as companyModel
 
@@ -20,6 +22,21 @@ class companyRepository():
         self.db.commit()
         self.db.refresh(new_company)
         return new_company
+    
+    def update_company(self, nit:str, company:Company)-> dict:
+        Updatecompany: Company= self.db.query(companyModel).filter(companyModel.nit == nit, companyModel.id_city == company.id_city).first()  
+        if Updatecompany is None:
+            raise HTTPException(status_code=404, detail="Item not found")
+        
+        Updatecompany.name = company.name
+        Updatecompany.address = company.address   
+        Updatecompany.id_city = company.id_city  
+        Updatecompany.phone = company.phone
+        Updatecompany.status = company.status  
+
+        self.db.commit()
+        self.db.refresh(Updatecompany)
+        return Updatecompany
     
     def delete_company(self, id: int) -> dict:
         element: Company = self.db.query(companyModel).filter(companyModel.id == id).first()

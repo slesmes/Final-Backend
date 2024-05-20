@@ -1,4 +1,6 @@
 from typing import List
+
+from fastapi import HTTPException
 from src.schemas.user import User
 from src.models.user import User as UserModel
 
@@ -26,6 +28,23 @@ class UserRepository():
         self.db.refresh(new_user)
         return new_user
     
+    def update_user(self, id:str, user:User)-> dict:
+        Updateuser: User= self.db.query(UserModel).filter(UserModel.identification == id, UserModel.id_branch == user.id_branch).first()  
+        if Updateuser is None:
+            raise HTTPException(status_code=404, detail="Item not found")
+        
+        Updateuser.name = user.name
+        Updateuser.lastname = user.lastname  
+        Updateuser.email = user.email  
+        Updateuser.id_branch = user.id_branch  
+        Updateuser.id_rol = user.id_rol  
+        Updateuser.phone = user.phone
+        Updateuser.status = user.status  
+
+        self.db.commit()
+        self.db.refresh(Updateuser)
+        return Updateuser
+
     def remove_user(self, id: int ) -> dict:
         element: User = self.db.query(UserModel).filter(UserModel.id == id).first()
         self.db.delete(element)

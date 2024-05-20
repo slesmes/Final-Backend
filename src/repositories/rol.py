@@ -1,4 +1,6 @@
 from typing import List
+
+from fastapi import HTTPException
 from src.schemas.rol import Rol
 from src.models.rol import Rol as rolModel
 
@@ -20,6 +22,20 @@ class rolRepository():
         self.db.commit()
         self.db.refresh(new_rol)
         return new_rol
+    
+    def update_rol(self, id:str,rol:Rol)-> dict:
+        Updaterol: Rol= self.db.query(rolModel).filter(rolModel.id == id).first()  
+        if Updaterol is None:
+            raise HTTPException(status_code=404, detail="Item not found")
+        
+        Updaterol.id_branch = rol.id_branch
+        Updaterol.name = rol.name
+        Updaterol.description = rol.description
+
+
+        self.db.commit()
+        self.db.refresh(Updaterol)
+        return Updaterol
     
     def delete_rol(self, id: int) -> dict:
         element: Rol = self.db.query(rolModel).filter(rolModel.id == id).first()

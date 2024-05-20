@@ -1,14 +1,16 @@
-from fastapi import APIRouter, Body, Depends, Query, Path, Security, status
 from fastapi.responses import JSONResponse
 from typing import Annotated, List
-from fastapi.security import HTTPAuthorizationCredentials
 from fastapi.encoders import jsonable_encoder
 from src.repositories.auth import AuthRepository
 from src.config.database import SessionLocal
 from src.schemas.user import User as UserCreateSchema
 from src.schemas.user import LoginUser as UserLoginSchema
-from src.auth.has_access import has_access, security
 from src.auth import auth_handler
+from src.auth.has_access import security
+from fastapi.security import HTTPAuthorizationCredentials
+from fastapi import APIRouter, Body, Depends, Query, Path, Security, status
+
+
 
 
 auth_router = APIRouter()

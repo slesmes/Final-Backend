@@ -1,4 +1,6 @@
 from typing import List
+
+from fastapi import HTTPException
 from src.schemas.supplier import Supplier
 from src.models.supplier import Supplier as supplierModel
 
@@ -21,6 +23,22 @@ class supplierRepository():
         self.db.refresh(new_supplier)
         return new_supplier
     
+    def update_supplier(self, id:str,supplier:Supplier)-> dict:
+        Updatesupplier: Supplier= self.db.query(supplierModel).filter(supplierModel.id == id).first()  
+        if Updatesupplier is None:
+            raise HTTPException(status_code=404, detail="Item not found")
+        
+        Updatesupplier.name = supplier.name
+        Updatesupplier.name_seller = supplier.name_seller
+        Updatesupplier.phone = supplier.phone
+        Updatesupplier.status = supplier.status
+
+
+
+        self.db.commit()
+        self.db.refresh(Updatesupplier)
+        return Updatesupplier
+
     def delete_supplier(self, id: int) -> dict:
         element: Supplier = self.db.query(supplierModel).filter(supplierModel.id == id).first()
         self.db.delete(element)
