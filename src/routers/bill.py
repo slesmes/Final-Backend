@@ -63,3 +63,22 @@ def remove_bill(id: int = Path(ge=1)) -> dict:
         "message": "The bill was removed successfully",
         "data": None
     }, status_code=200)
+
+@bill_router.put('/{id}',
+    tags=['bill'],
+    response_model=dict,
+    description="Updates specific bill")
+def update_bill(id: int , bill: Bill = Body()) -> dict:
+    db = SessionLocal()
+    element = billRepository(db).get_bill(id)
+    if not element:
+        return JSONResponse(content={
+            "message": "The requested bill was not found",
+            "data": None
+        }, status_code=404)
+    
+    element = billRepository(db).update_bill(id,bill)
+    return JSONResponse(content={
+    "message": "The bill was successfully updated",
+    "data": jsonable_encoder(element)
+    }, status_code=200)

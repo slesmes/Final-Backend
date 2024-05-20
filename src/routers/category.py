@@ -63,3 +63,22 @@ def remove_category(id: int = Path(ge=1)) -> dict:
         "message": "The category was removed successfully",
         "data": None
     }, status_code=200)
+
+@category_router.put('/{id}',
+    tags=['category'],
+    response_model=dict,
+    description="Updates specific category")
+def update_category(id: int , category: Category = Body()) -> dict:
+    db = SessionLocal()
+    element = categoryRepository(db).get_category(id)
+    if not element:
+        return JSONResponse(content={
+            "message": "The requested category  was not found",
+            "data": None
+        }, status_code=404)
+    
+    element = categoryRepository(db).update_category(id,category)
+    return JSONResponse(content={
+    "message": "The category was successfully updated",
+    "data": jsonable_encoder(element)
+    }, status_code=200)

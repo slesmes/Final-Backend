@@ -26,3 +26,12 @@ class billRepository():
         self.db.delete(element)
         self.db.commit()
         return element  
+    
+    def update_bill(self, id: int, bill_data: Bill) -> dict:
+        bill = self.db.query(billModel).filter(billModel.id == id).first()        
+        bill.date_bill= bill_data.date_bill
+        bill.status= bill_data.status
+        self.db.commit()
+        self.db.refresh(bill)
+        return bill  
+    

@@ -26,3 +26,12 @@ class categoryRepository():
         self.db.delete(element)
         self.db.commit()
         return element  
+    
+    def update_category(self, id: int, category_data: Category) -> dict:
+        category = self.db.query(categoryModel).filter(categoryModel.id == id).first()        
+        category.name= category_data.name
+        category.description= category_data.description
+        category.status= category_data.status
+        self.db.commit()
+        self.db.refresh(category)
+        return category  
