@@ -15,7 +15,7 @@ class Product(Base):
     id_branch = Column(Integer, ForeignKey('branch.id'), nullable=False)
     Rcategory = relationship("Category", back_populates="Rproduct")
     Rbranch = relationship("Branch", back_populates="Rproduct")
+    Rproductxsupplier = relationship("Productxsupplier", back_populates="Rproduct")
 Rsale = relationship("Sale", back_populates="Rproduct")
-Rproductxsupplier = relationship("Productxsupplier", back_populates="Rproduct")
 Rproductxpart = relationship("Productxpart", back_populates="Rproduct")
 

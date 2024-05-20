@@ -7,7 +7,7 @@ class Category(BaseModel):
     id: int = Field(default=None, title="Category ID")
     name: str = Field(default=None, title="Category Name")
     description: str = Field(default=None, title="Category Description")
-    id_company: int = Field(default=None, title="ID of the branch")
+    id_branch: int = Field(default=None, title="ID of the branch")
     status: bool = Field(default=True, title="Category status")
 
     class Config:
@@ -15,6 +15,6 @@ class Category(BaseModel):
             "example": {
                 "name": "Example Category",
                 "description": "This is an example category",
-                "id_company": "company_id"
+                "id_branch": "company_id"
             }
         }

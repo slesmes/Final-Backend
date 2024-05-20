@@ -16,7 +16,8 @@ from src.routers.user import user_router
 from src.routers.bill import bill_router
 from src.routers.product import product_router
 from src.routers.category import category_router
-
+from src.routers.supplier import supplier_router
+from src.routers.productXsupplier import productXsupplier_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -64,6 +65,14 @@ tags_metadata = [
     {
         "name": "category",
         "description": "category handling endpoints",
+    },
+    {
+        "name": "supplier",
+        "description": "supplier handling endpoints",
+    },
+    {
+        "name": "ProductXsupplier",
+        "description": "ProductXsupplier handling endpoints",
     }
 ]
 app = FastAPI(openapi_tags=tags_metadata)
@@ -79,6 +88,8 @@ app.include_router(prefix="/api/v1/user", router=user_router)
 app.include_router(prefix="/api/v1/bill", router=bill_router)
 app.include_router(prefix="/api/v1/product", router=product_router)
 app.include_router(prefix="/api/v1/category", router=category_router)
+app.include_router(prefix="/api/v1/supplier", router=supplier_router)
+app.include_router(prefix="/api/v1/producdxsupplier", router=productXsupplier_router)
 
 app.add_middleware(ErrorHandler)
 

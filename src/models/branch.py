@@ -18,10 +18,10 @@ class Branch(Base):
     Rbill = relationship("Bill", back_populates="Rbranch")
     Rcategory = relationship("Category", back_populates="Rbranch")
     Rproduct = relationship("Product", back_populates="Rbranch")
+    Rproductxsupplier = relationship("Productxsupplier", back_populates="Rbranch")
 Rsupplierxbranch = relationship("Supplierxbranch", back_populates="Rbranch")
 Rpart = relationship("Part", back_populates="Rbranch")
 Rsupplierxpart = relationship("Supplierxpart", back_populates="Rbranch")
-Rproductxsupplier = relationship("Productxsupplier", back_populates="Rbranch")
 Rproductxpart = relationship("Productxpart", back_populates="Rbranch")
 
 
