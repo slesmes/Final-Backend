@@ -45,12 +45,3 @@ class branchRepository():
         self.db.commit()
         return element  
     
-    def update_branch(self, id: int, branch_data: Branch) -> dict:
-        branch = self.db.query(branchModel).filter(branchModel.id == id).first()        
-        branch.name= branch.name
-        branch.address= branch.address
-        branch.phone= branch.phone
-        branch.status= branch.status
-        self.db.commit()
-        self.db.refresh(branch)
-        return branch  

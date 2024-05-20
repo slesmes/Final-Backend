@@ -4,9 +4,9 @@ from fastapi import HTTPException, status
 
 class Department(BaseModel):
 
-    id: int = Field(default=None, title="Department ID")
+    id: int = Field(title="Department ID")
     name: str = Field(default=None, title="Department Name")
-    id_country: int = Field(default=None, title="Country ID")
+    id_country: int = Field(title="Country ID")
 
     class Config:
         json_schema_extra = {

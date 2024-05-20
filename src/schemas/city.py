@@ -4,9 +4,9 @@ from fastapi import HTTPException, status
 
 class City(BaseModel):
 
-    id: int = Field(default=None, title="City ID")
+    id: int = Field(title="City ID")
     name: str = Field(default=None, title="City Name")
-    id_department: int = Field(default=None, title="Department ID")
+    id_department: int = Field(title="Department ID")
     postal_code: str = Field(default=None, title="Postal code of the city")
 
     class Config:

@@ -81,22 +81,3 @@ def remove_branch(id: int = Path(ge=1), credentials: HTTPAuthorizationCredential
         "message": "The branch was removed successfully",
         "data": None
     }, status_code=200)
-
-@branch_router.put('/{id}',
-    tags=['branch'],
-    response_model=dict,
-    description="Updates specific branch")
-def update_branch(id: int , branch: Branch = Body()) -> dict:
-    db = SessionLocal()
-    element = branchRepository(db).get_branch(id)
-    if not element:
-        return JSONResponse(content={
-            "message": "The requested branch  was not found",
-            "data": None
-        }, status_code=404)
-    
-    element = branchRepository(db).update_branch(id,branch)
-    return JSONResponse(content={
-    "message": "The branch was successfully updated",
-    "data": jsonable_encoder(element)
-    }, status_code=200)

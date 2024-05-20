@@ -4,10 +4,10 @@ from fastapi import HTTPException, status
 
 class ProductXsupplier(BaseModel):
 
-    id: int = Field(default=None, title="productXsupplier ID")
-    id_supplier: int = Field(default=None, tittle="ID of the supplier")
-    id_branch: int = Field(default=None, title="ID of the branch")
-    id_product: int = Field(default=None, title="ID of the product")
+    id: int = Field(title="productXsupplier ID")
+    id_supplier: int = Field( tittle="ID of the supplier")
+    id_branch: int = Field( title="ID of the branch")
+    id_product: int = Field( title="ID of the product")
 
     class Config:
         json_schema_extra = {

@@ -4,10 +4,10 @@ from fastapi import HTTPException, status
 
 class Rol(BaseModel):
 
-    id: int = Field(default=None, title="Rol ID")
+    id: int = Field( title="Rol ID")
     name: str = Field(default=None, title="Rol Name")
     description: str = Field(default=None, title="Rol Description")
-    id_branch: int = Field(default=None, title="ID of the branch")
+    id_branch: int = Field( title="ID of the branch")
 
     class Config:
         json_schema_extra = {

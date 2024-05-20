@@ -4,10 +4,10 @@ from fastapi import HTTPException, status
 
 class Branch(BaseModel):
 
-    id: int = Field(default=None, title="Branch id")
+    id: int = Field(title="Branch id")
     name: str = Field(default=None, title="Branch Name")
-    id_city: int = Field(default=None, title="ID of the city")
-    id_company: int = Field(default=None, title="ID of the company")
+    id_city: int = Field(title="ID of the city")
+    id_company: int = Field(title="ID of the company")
     address: str = Field(default=None, tittle="Adress of the branch")
     phone: str = Field(default=None, tittle="Phone of the branch")
     status: bool = Field(default=True, title="Branch status")
