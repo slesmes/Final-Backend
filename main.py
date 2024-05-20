@@ -11,14 +11,13 @@ from src.routers.city import city_router
 from src.routers.company import company_router
 from src.routers.branch import branch_router
 from src.routers.client import client_router
+from src.routers.rol import rol_router
+from src.routers.user import user_router
+
 
 Base.metadata.create_all(bind=engine)
 
 tags_metadata = [
-    {
-        "name": "country",
-        "description": "country handling endpoints",
-    },
     {
         "name": "user",
         "description": "User handling endpoints",
@@ -46,6 +45,14 @@ tags_metadata = [
     {
         "name": "client",
         "description": "client handling endpoints",
+    },
+    {
+        "name": "bill",
+        "description": "bill handling endpoints",
+    },
+    {
+        "name": "rol",
+        "description": "rol handling endpoints",
     }
 ]
 app = FastAPI(openapi_tags=tags_metadata)
@@ -56,6 +63,8 @@ app.include_router(prefix="/api/v1/city", router=city_router)
 app.include_router(prefix="/api/v1/company", router=company_router)
 app.include_router(prefix="/api/v1/branch", router=branch_router)
 app.include_router(prefix="/api/v1/client", router=client_router)
+app.include_router(prefix="/api/v1/rol", router=rol_router)
+app.include_router(prefix="/api/v1/user", router=user_router)
 
 app.add_middleware(ErrorHandler)
 

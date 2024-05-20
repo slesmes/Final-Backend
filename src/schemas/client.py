@@ -17,7 +17,7 @@ class Client(BaseModel):
     class Config:
         json_schema_extra = {
             "example": {
-                "identification" "Example identification"
+                "identification": "Example identification",
                 "name": "Example name",
                 "lastname": "Example lastname",
                 "address": "Example username",
