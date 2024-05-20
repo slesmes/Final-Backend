@@ -11,7 +11,7 @@ productXsupplier_router = APIRouter()
 
 
 @productXsupplier_router.get('/',
-    tags=['productXsupplier'],
+    tags=['ProductXsupplier'],
     response_model=List[ProductXsupplier],
     description="Returns all productXsupplier ")
 def get_all_productXsuppliers() -> List[ProductXsupplier]:
@@ -20,7 +20,7 @@ def get_all_productXsuppliers() -> List[ProductXsupplier]:
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
 
 @productXsupplier_router.get('/{id}',
-    tags=['productXsupplier'],
+    tags=['ProductXsupplier'],
     response_model=ProductXsupplier,
     description="Returns data of one specific productXsupplier")
 def get_productXsupplier_by_id(id: int = Path(ge=0, le=5000)) -> ProductXsupplier:
@@ -35,7 +35,7 @@ def get_productXsupplier_by_id(id: int = Path(ge=0, le=5000)) -> ProductXsupplie
     return JSONResponse(content=jsonable_encoder(element),status_code=200)
 
 @productXsupplier_router.post('/',
-    tags=['productXsupplier'],
+    tags=['ProductXsupplier'],
     response_model=dict,
     description="Creates a new productXsupplier")
 def create_productXsupplier(productXsupplier: ProductXsupplier) -> dict:
@@ -47,7 +47,7 @@ def create_productXsupplier(productXsupplier: ProductXsupplier) -> dict:
     }, status_code=201)
 
 @productXsupplier_router.delete('/{id}',
-    tags=['productXsupplier'],
+    tags=['ProductXsupplier'],
     response_model=dict,
     description="Removes specific productXsupplier")
 def remove_productXsupplier(id: int = Path(ge=1)) -> dict:

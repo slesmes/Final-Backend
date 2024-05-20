@@ -10,7 +10,7 @@ class Supplier(Base):
     status = Column(Boolean, nullable=False, default=True)
     phone = Column(String(length=100), nullable=False )
     Rproductxsupplier = relationship("Productxsupplier",back_populates="Rsupplier")
-Rsupplierxbranch = relationship("Supplierxbranch",back_populates="Rsupplier")
+    Rsupplierxbranch = relationship("Supplierxbranch",back_populates="Rsupplier")
 Rsupplierxpart = relationship("Supplierxpart",back_populates="Rsupplier")
 Rproductxpart = relationship("Productxpart",back_populates="Rsupplier")
 

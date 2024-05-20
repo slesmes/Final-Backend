@@ -18,6 +18,8 @@ from src.routers.product import product_router
 from src.routers.category import category_router
 from src.routers.supplier import supplier_router
 from src.routers.productXsupplier import productXsupplier_router
+from src.routers.supplierXbranch import supplierXbranch_router
+from src.routers.sale import sale_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -73,6 +75,14 @@ tags_metadata = [
     {
         "name": "ProductXsupplier",
         "description": "ProductXsupplier handling endpoints",
+    },
+    {
+        "name": "supplierXbranch",
+        "description": "supplierXbranch handling endpoints",
+    },
+    {
+        "name": "sale",
+        "description": "sale handling endpoints",
     }
 ]
 app = FastAPI(openapi_tags=tags_metadata)
@@ -90,6 +100,8 @@ app.include_router(prefix="/api/v1/product", router=product_router)
 app.include_router(prefix="/api/v1/category", router=category_router)
 app.include_router(prefix="/api/v1/supplier", router=supplier_router)
 app.include_router(prefix="/api/v1/producdxsupplier", router=productXsupplier_router)
+app.include_router(prefix="/api/v1/supplierxbranch", router=supplierXbranch_router)
+app.include_router(prefix="/api/v1/sale", router=sale_router)
 
 app.add_middleware(ErrorHandler)
 
