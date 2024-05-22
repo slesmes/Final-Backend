@@ -1,5 +1,11 @@
+<p align="left">
+   <img src="https://img.shields.io/badge/STATUS-TERMINADO-brightgreen">
+</p>
+
 # Final-Backend
-#Integrantes:
+
+# Integrantes
+
 | Nombre                         | Correo                            | 
 |--------------------------------|-----------------------------------|
 | Santiago Lesmes Marin          | santiago.slesmes@autonoma.edu.co  | 
@@ -7,7 +13,7 @@
 | María José Muñoz Posada        | mariaj.munozp@autonoma.edu.co     | 
 
 #Descripción:
-Nuestro proyecto consiste en un sistema que nos ayuda a administrar y gestionar  todos los usuarios, productos, provedores y sedes de una compañia   
+Nuestro proyecto consiste en un sistema que nos ayuda a administrar y gestionar  todos los usuarios, productos, provedores y sedes de una compañia.   
 
 # API Endpoints Documentation
 
