@@ -8,12 +8,12 @@ class partRepository():
     def __init__(self, db) -> None:
         self.db = db
 
-    def get_all_parts(self) -> List[Part]:
-        query = self.db.query(partModel)
+    def get_all_parts(self, branch: int) -> List[Part]:
+        query = self.db.query(partModel).filter(partModel.id_branch == branch)
         return query.all()
 
-    def get_part(self, id: int ) -> Part:
-        element = self.db.query(partModel).filter(partModel.id == id).first()
+    def get_part(self, id: int, branch:int ) -> Part:
+        element = self.db.query(partModel).filter(partModel.id == id, partModel.id_branch == branch).first()
         return element
     
     def create_part(self, part: Part) -> dict:
@@ -38,8 +38,8 @@ class partRepository():
         self.db.refresh(Updatepart)
         return Updatepart
     
-    def delete_part(self, id: int) -> dict:
-        element: Part = self.db.query(partModel).filter(partModel.id == id).first()
+    def delete_part(self, id: int, branch:int) -> dict:
+        element: Part = self.db.query(partModel).filter(partModel.id == id, partModel.id_branch == branch).first()
         self.db.delete(element)
         self.db.commit()
         return element 

@@ -8,12 +8,12 @@ class saleRepository():
     def __init__(self, db) -> None:
         self.db = db
 
-    def get_all_sales(self) -> List[Sale]:
-        query = self.db.query(saleModel)
+    def get_all_sales(self, branch:int) -> List[Sale]:
+        query = self.db.query(saleModel).filter(saleModel.id_branch == branch)
         return query.all()
 
-    def get_sale(self, id: int ) -> Sale:
-        element = self.db.query(saleModel).filter(saleModel.id == id).first()
+    def get_sale(self, id: int, branch: int ) -> Sale:
+        element = self.db.query(saleModel).filter(saleModel.id == id, saleModel.id_branch == branch).first()
         return element
     
     def create_sale(self, sale: Sale) -> dict:
@@ -38,8 +38,8 @@ class saleRepository():
         self.db.refresh(Updatesale)
         return Updatesale
 
-    def delete_sale(self, id: int) -> dict:
-        element: Sale = self.db.query(saleModel).filter(saleModel.id == id).first()
+    def delete_sale(self, id: int, branch:int) -> dict:
+        element: Sale = self.db.query(saleModel).filter(saleModel.id == id, saleModel.id_branch == branch).first()
         self.db.delete(element)
         self.db.commit()
         return element  

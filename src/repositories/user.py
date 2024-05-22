@@ -9,12 +9,12 @@ class UserRepository():
     def __init__(self, db) -> None:
         self.db = db
 
-    def get_all_Users(self) -> List[User]:
-        query = self.db.query(UserModel)
+    def get_all_Users(self, branch:int) -> List[User]:
+        query = self.db.query(UserModel).filter(UserModel.id_branch == branch)
         return query.all()
     
-    def get_User(self, id: int) -> User:
-        element = self.db.query(UserModel).filter(UserModel.id == id).first()
+    def get_User(self, id: int, branch: int) -> User:
+        element = self.db.query(UserModel).filter(UserModel.id == id, UserModel.id_branch == branch).first()
         return element
     
     def get_user(self, username: str) -> User:
@@ -45,8 +45,8 @@ class UserRepository():
         self.db.refresh(Updateuser)
         return Updateuser
 
-    def remove_user(self, id: int ) -> dict:
-        element: User = self.db.query(UserModel).filter(UserModel.id == id).first()
+    def remove_user(self, id: int, branch:int ) -> dict:
+        element: User = self.db.query(UserModel).filter(UserModel.id == id, UserModel.id_branch == branch ).first()
         self.db.delete(element)
         self.db.commit()
         return element    

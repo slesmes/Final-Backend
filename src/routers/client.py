@@ -6,6 +6,7 @@ from typing import Annotated, Any, Optional, List
 from src.config.database import SessionLocal
 from src.models.client import Client as clientModel
 from fastapi.encoders import jsonable_encoder
+from src.auth import auth_handler
 from src.repositories.client import clientRepository
 from src.auth.has_access import security
 from fastapi.security import HTTPAuthorizationCredentials
@@ -19,7 +20,10 @@ client_router = APIRouter()
     description="Returns all client ")
 def get_all_clients(credentials: HTTPAuthorizationCredentials = Security(security)) -> List[Client]:
     db = SessionLocal()
-    result = clientRepository(db).get_all_clients()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    company = payload.get("user.company")
+    result = clientRepository(db).get_all_clients(company)
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
 
 @client_router.get('/{id}',
@@ -28,7 +32,10 @@ def get_all_clients(credentials: HTTPAuthorizationCredentials = Security(securit
     description="Returns data of one specific client")
 def get_client_by_id(id: int = Path(ge=0, le=5000), credentials: HTTPAuthorizationCredentials = Security(security)) -> Client:
     db = SessionLocal()
-    element = clientRepository(db).get_client(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    company = payload.get("user.company")
+    element = clientRepository(db).get_client(id, company)
     if not element:
         return JSONResponse(content={
             "message": "The requested client was not found",
@@ -72,13 +79,16 @@ def update_city(credentials: Annotated[HTTPAuthorizationCredentials, Depends(sec
     description="Removes specific client")
 def remove_client(id: int = Path(ge=1), credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
-    element = clientRepository(db).get_client(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    company = payload.get("user.company")
+    element = clientRepository(db).get_client(id, company)
     if not element:
         return JSONResponse(content={
             "message": "The requested client was not found",
             "data": None
         }, status_code=404)
-    clientRepository(db).delete_client(id)
+    clientRepository(db).delete_client(id, company)
     return JSONResponse(content={
         "message": "The client was removed successfully",
         "data": None

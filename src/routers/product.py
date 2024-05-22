@@ -20,7 +20,10 @@ product_router = APIRouter()
     description="Returns all product ")
 def get_all_products(credentials: HTTPAuthorizationCredentials = Security(security)) -> List[Product]:
     db = SessionLocal()
-    result = productRepository(db).get_all_products()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    result = productRepository(db).get_all_products(branch)
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
 
 @product_router.get('/{id}',
@@ -29,7 +32,10 @@ def get_all_products(credentials: HTTPAuthorizationCredentials = Security(securi
     description="Returns data of one specific product")
 def get_product_by_id(id: int = Path(ge=0, le=5000), credentials: HTTPAuthorizationCredentials = Security(security)) -> Product:
     db = SessionLocal()
-    element = productRepository(db).get_product(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = productRepository(db).get_product(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested product was not found",
@@ -67,22 +73,22 @@ def update_part(credentials: Annotated[HTTPAuthorizationCredentials, Depends(sec
         status_code=status.HTTP_201_CREATED
     )
 
-
-
-
 @product_router.delete('/{id}',
     tags=['product'],
     response_model=dict,
     description="Removes specific product")
 def remove_product(id: int = Path(ge=1), credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
-    element = productRepository(db).get_product(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = productRepository(db).get_product(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested product was not found",
             "data": None
         }, status_code=404)
-    productRepository(db).delete_product(id)
+    productRepository(db).delete_product(id, branch)
     return JSONResponse(content={
         "message": "The product was removed successfully",
         "data": None

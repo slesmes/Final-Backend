@@ -8,12 +8,12 @@ class productXpartRepository():
     def __init__(self, db) -> None:
         self.db = db
 
-    def get_all_productXparts(self) -> List[ProductXpart]:
-        query = self.db.query(productXpartModel)
+    def get_all_productXparts(self, branch:int) -> List[ProductXpart]:
+        query = self.db.query(productXpartModel).filter(productXpartModel.id_branch == branch)
         return query.all()
 
-    def get_productXpart(self, id: int ) -> ProductXpart:
-        element = self.db.query(productXpartModel).filter(productXpartModel.id == id).first()
+    def get_productXpart(self, id: int, branch:int ) -> ProductXpart:
+        element = self.db.query(productXpartModel).filter(productXpartModel.id == id, productXpartModel.id_branch == branch).first()
         return element
     
     def create_productXpart(self, productXpart: ProductXpart) -> dict:
@@ -39,8 +39,8 @@ class productXpartRepository():
         self.db.refresh(Updateproductxpart)
         return Updateproductxpart
     
-    def delete_productXpart(self, id: int) -> dict:
-        element: ProductXpart = self.db.query(productXpartModel).filter(productXpartModel.id == id).first()
+    def delete_productXpart(self, id: int, branch:int) -> dict:
+        element: ProductXpart = self.db.query(productXpartModel).filter(productXpartModel.id == id, productXpartModel.id_branch == branch).first()
         self.db.delete(element)
         self.db.commit()
         return element  

@@ -8,6 +8,7 @@ from src.models.branch import Branch as branchModel
 from fastapi.encoders import jsonable_encoder
 from src.repositories.branch import branchRepository
 from src.auth.has_access import security
+from src.auth import auth_handler
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import APIRouter, Body, Depends, Query, Path, Security, status
 branch_router = APIRouter()
@@ -20,7 +21,10 @@ branch_router = APIRouter()
     description="Returns all branch ")
 def get_all_branchs(credentials: HTTPAuthorizationCredentials = Security(security)) -> List[Branch]:
     db = SessionLocal()
-    result = branchRepository(db).get_all_branchs()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    company = payload.get("user.company")
+    result = branchRepository(db).get_all_branchs(company)
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
 
 @branch_router.get('/{id}',
@@ -29,7 +33,10 @@ def get_all_branchs(credentials: HTTPAuthorizationCredentials = Security(securit
     description="Returns data of one specific branch")
 def get_branch_by_id(id: int = Path(ge=0, le=5000), credentials: HTTPAuthorizationCredentials = Security(security)) -> Branch:
     db = SessionLocal()
-    element = branchRepository(db).get_branch(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    company = payload.get("user.company")
+    element = branchRepository(db).get_branch(id, company)
     if not element:
         return JSONResponse(content={
             "message": "The requested branch was not found",
@@ -70,13 +77,16 @@ def update_branch(credentials: Annotated[HTTPAuthorizationCredentials, Depends(s
     description="Removes specific branch")
 def remove_branch(id: int = Path(ge=1), credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
-    element = branchRepository(db).get_branch(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    company = payload.get("user.company")
+    element = branchRepository(db).get_branch(id, company)
     if not element:
         return JSONResponse(content={
             "message": "The requested branch was not found",
             "data": None
         }, status_code=404)
-    branchRepository(db).delete_branch(id)
+    branchRepository(db).delete_branch(id, company)
     return JSONResponse(content={
         "message": "The branch was removed successfully",
         "data": None

@@ -8,12 +8,12 @@ class productXsupplierRepository():
     def __init__(self, db) -> None:
         self.db = db
 
-    def get_all_productXsuppliers(self) -> List[ProductXsupplier]:
-        query = self.db.query(productXsupplierModel)
+    def get_all_productXsuppliers(self, branch:int) -> List[ProductXsupplier]:
+        query = self.db.query(productXsupplierModel).filter(productXsupplierModel.id_branch == branch)
         return query.all()
 
-    def get_productXsupplier(self, id: int ) -> ProductXsupplier:
-        element = self.db.query(productXsupplierModel).filter(productXsupplierModel.id == id).first()
+    def get_productXsupplier(self, id: int, branch:int ) -> ProductXsupplier:
+        element = self.db.query(productXsupplierModel).filter(productXsupplierModel.id == id, productXsupplierModel.id_branch == branch).first()
         return element
     
     def create_productXsupplier(self, productXsupplier: ProductXsupplier) -> dict:
@@ -37,8 +37,8 @@ class productXsupplierRepository():
         self.db.refresh(Updateproductxsupplier)
         return Updateproductxsupplier
 
-    def delete_productXsupplier(self, id: int) -> dict:
-        element: ProductXsupplier = self.db.query(productXsupplierModel).filter(productXsupplierModel.id == id).first()
+    def delete_productXsupplier(self, id: int, branch:int) -> dict:
+        element: ProductXsupplier = self.db.query(productXsupplierModel).filter(productXsupplierModel.id == id, productXsupplierModel.id_branch == branch).first()
         self.db.delete(element)
         self.db.commit()
         return element  

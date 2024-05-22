@@ -8,12 +8,12 @@ class categoryRepository():
     def __init__(self, db) -> None:
         self.db = db
 
-    def get_all_categorys(self) -> List[Category]:
-        query = self.db.query(categoryModel)
+    def get_all_categorys(self, id_branch:int) -> List[Category]:
+        query = self.db.query(categoryModel).filter(categoryModel.id_branch == id_branch)
         return query.all()
 
-    def get_category(self, id: int ) -> Category:
-        element = self.db.query(categoryModel).filter(categoryModel.id == id).first()
+    def get_category(self, id: int, id_branch:int ) -> Category:
+        element = self.db.query(categoryModel).filter(categoryModel.id == id, categoryModel.id_branch == id_branch).first()
         return element
     
     def create_category(self, category: Category) -> dict:

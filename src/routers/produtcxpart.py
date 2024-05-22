@@ -7,6 +7,7 @@ from src.config.database import SessionLocal
 from src.models.productXpart import Productxpart as productXpartModel
 from fastapi.encoders import jsonable_encoder
 from src.repositories.productXpart import productXpartRepository
+from src.auth import auth_handler
 from src.auth.has_access import security
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import APIRouter, Body, Depends, Query, Path, Security, status
@@ -19,7 +20,10 @@ productXpart_router = APIRouter()
     description="Returns all productXpart ")
 def get_all_productXparts(credentials: HTTPAuthorizationCredentials = Security(security)) -> List[ProductXpart]:
     db = SessionLocal()
-    result = productXpartRepository(db).get_all_productXparts()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    result = productXpartRepository(db).get_all_productXparts(branch)
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
 
 @productXpart_router.get('/{id}',
@@ -28,7 +32,10 @@ def get_all_productXparts(credentials: HTTPAuthorizationCredentials = Security(s
     description="Returns data of one specific productXpart")
 def get_productXpart_by_id(id: int = Path(ge=0, le=5000), credentials: HTTPAuthorizationCredentials = Security(security)) -> ProductXpart:
     db = SessionLocal()
-    element = productXpartRepository(db).get_productXpart(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = productXpartRepository(db).get_productXpart(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested productXpart was not found",
@@ -70,13 +77,16 @@ def update_productXpart(credentials: Annotated[HTTPAuthorizationCredentials, Dep
     description="Removes specific productXpart")
 def remove_productXpart(id: int = Path(ge=1), credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
-    element = productXpartRepository(db).get_productXpart(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = productXpartRepository(db).get_productXpart(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested productXpart was not found",
             "data": None
         }, status_code=404)
-    productXpartRepository(db).delete_productXpart(id)
+    productXpartRepository(db).delete_productXpart(id, branch)
     return JSONResponse(content={
         "message": "The productXpart was removed successfully",
         "data": None

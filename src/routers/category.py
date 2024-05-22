@@ -20,7 +20,10 @@ category_router = APIRouter()
     description="Returns all category ")
 def get_all_categorys(credentials: HTTPAuthorizationCredentials = Security(security)) -> List[Category]:
     db = SessionLocal()
-    result = categoryRepository(db).get_all_categorys()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    result = categoryRepository(db).get_all_categorys(branch)
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
 
 @category_router.get('/{id}',
@@ -29,7 +32,10 @@ def get_all_categorys(credentials: HTTPAuthorizationCredentials = Security(secur
     description="Returns data of one specific category")
 def get_category_by_id(id: int = Path(ge=0, le=5000),credentials: HTTPAuthorizationCredentials = Security(security)) -> Category:
     db = SessionLocal()
-    element = categoryRepository(db).get_category(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = categoryRepository(db).get_category(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested category was not found",
@@ -75,13 +81,16 @@ def update_category(credentials: Annotated[HTTPAuthorizationCredentials, Depends
     description="Removes specific category")
 def remove_category(id: int = Path(ge=1),credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
-    element = categoryRepository(db).get_category(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = categoryRepository(db).get_category(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested category was not found",
             "data": None
         }, status_code=404)
-    categoryRepository(db).delete_category(id)
+    categoryRepository(db).delete_category(id, branch)
     return JSONResponse(content={
         "message": "The category was removed successfully",
         "data": None
