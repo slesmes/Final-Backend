@@ -5,6 +5,8 @@ from datetime import datetime, timezone, timedelta
 from sqlalchemy.orm import Session
 from src.repositories.user import UserRepository
 from src.models.user import User
+from src.repositories.branch import branchRepository
+from src.models.branch import Branch
 from src.config.database import SessionLocal
 import json
 
@@ -86,3 +88,15 @@ class JWTHandler:
         if user is None:
             raise HTTPException(status_code=401, detail="User not found")
         return user.id
+    
+    def get_current_user_branch(self, token) -> User:
+        db = SessionLocal()
+        payload = self.decode_token(token)
+        user_branch = payload.get("user.branch")
+        user_id = payload.get("user.id")
+        if user_branch is None:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        user = UserRepository(db).get_User(int(user_id))
+        if user is None:
+            raise HTTPException(status_code=401, detail="User not found")
+        return user_branch
