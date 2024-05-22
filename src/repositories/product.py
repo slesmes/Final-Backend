@@ -8,12 +8,12 @@ class productRepository():
     def __init__(self, db) -> None:
         self.db = db
 
-    def get_all_products(self) -> List[Product]:
-        query = self.db.query(productModel)
+    def get_all_products(self, branch:int) -> List[Product]:
+        query = self.db.query(productModel).filter(productModel.id_branch == branch)
         return query.all()
 
-    def get_product(self, id: int ) -> Product:
-        element = self.db.query(productModel).filter(productModel.id == id).first()
+    def get_product(self, id: int, branch:int ) -> Product:
+        element = self.db.query(productModel).filter(productModel.id == id, productModel.id_branch == branch).first()
         return element
     
     def create_product(self, product: Product) -> dict:
@@ -42,8 +42,8 @@ class productRepository():
         self.db.refresh(Updateproduct)
         return Updateproduct
 
-    def delete_product(self, id: int) -> dict:
-        element: Product = self.db.query(productModel).filter(productModel.id == id).first()
+    def delete_product(self, id: int, branch:int) -> dict:
+        element: Product = self.db.query(productModel).filter(productModel.id == id, productModel.id_branch == branch).first()
         self.db.delete(element)
         self.db.commit()
         return element 

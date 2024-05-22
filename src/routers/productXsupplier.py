@@ -4,6 +4,7 @@ from fastapi import FastAPI, Body, Query, Path
 from fastapi.responses import HTMLResponse, JSONResponse
 from typing import Annotated, Any, Optional, List
 from src.config.database import SessionLocal
+from src.auth import auth_handler
 from src.models.productXsupplier import Productxsupplier as productXsupplierModel
 from fastapi.encoders import jsonable_encoder
 from src.repositories.productXsupplier import productXsupplierRepository
@@ -19,7 +20,10 @@ productXsupplier_router = APIRouter()
     description="Returns all productXsupplier ")
 def get_all_productXsuppliers(credentials: HTTPAuthorizationCredentials = Security(security)) -> List[ProductXsupplier]:
     db = SessionLocal()
-    result = productXsupplierRepository(db).get_all_productXsuppliers()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    result = productXsupplierRepository(db).get_all_productXsuppliers(branch)
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
 
 @productXsupplier_router.get('/{id}',
@@ -28,7 +32,10 @@ def get_all_productXsuppliers(credentials: HTTPAuthorizationCredentials = Securi
     description="Returns data of one specific productXsupplier")
 def get_productXsupplier_by_id(id: int = Path(ge=0, le=5000), credentials: HTTPAuthorizationCredentials = Security(security)) -> ProductXsupplier:
     db = SessionLocal()
-    element = productXsupplierRepository(db).get_productXsupplier(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = productXsupplierRepository(db).get_productXsupplier(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested productXsupplier was not found",
@@ -70,13 +77,16 @@ def update_productXsupplier(credentials: Annotated[HTTPAuthorizationCredentials,
     description="Removes specific productXsupplier")
 def remove_productXsupplier(id: int = Path(ge=1), credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
-    element = productXsupplierRepository(db).get_productXsupplier(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = productXsupplierRepository(db).get_productXsupplier(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested productXsupplier was not found",
             "data": None
         }, status_code=404)
-    productXsupplierRepository(db).delete_productXsupplier(id)
+    productXsupplierRepository(db).delete_productXsupplier(id, branch)
     return JSONResponse(content={
         "message": "The productXsupplier was removed successfully",
         "data": None

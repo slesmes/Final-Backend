@@ -8,12 +8,12 @@ class rolRepository():
     def __init__(self, db) -> None:
         self.db = db
 
-    def get_all_rols(self) -> List[Rol]:
-        query = self.db.query(rolModel)
+    def get_all_rols(self, branch: int) -> List[Rol]:
+        query = self.db.query(rolModel).filter(rolModel.id_branch == branch)
         return query.all()
 
-    def get_rol(self, id: int ) -> Rol:
-        element = self.db.query(rolModel).filter(rolModel.id == id).first()
+    def get_rol(self, id: int, branch:int ) -> Rol:
+        element = self.db.query(rolModel).filter(rolModel.id == id, rolModel.id_branch == branch).first()
         return element
     
     def create_rol(self, rol: Rol) -> dict:
@@ -37,8 +37,8 @@ class rolRepository():
         self.db.refresh(Updaterol)
         return Updaterol
     
-    def delete_rol(self, id: int) -> dict:
-        element: Rol = self.db.query(rolModel).filter(rolModel.id == id).first()
+    def delete_rol(self, id: int, branch: int) -> dict:
+        element: Rol = self.db.query(rolModel).filter(rolModel.id == id, rolModel.id_branch == branch).first()
         self.db.delete(element)
         self.db.commit()
         return element  

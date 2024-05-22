@@ -20,7 +20,10 @@ sale_router = APIRouter()
     description="Returns all sale ")
 def get_all_sales(credentials: HTTPAuthorizationCredentials = Security(security)) -> List[Sale]:
     db = SessionLocal()
-    result = saleRepository(db).get_all_sales()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    result = saleRepository(db).get_all_sales(branch)
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
 
 @sale_router.get('/{id}',
@@ -29,7 +32,10 @@ def get_all_sales(credentials: HTTPAuthorizationCredentials = Security(security)
     description="Returns data of one specific sale")
 def get_sale_by_id(id: int = Path(ge=0, le=5000), credentials: HTTPAuthorizationCredentials = Security(security)) -> Sale:
     db = SessionLocal()
-    element = saleRepository(db).get_sale(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = saleRepository(db).get_sale(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested sale was not found",
@@ -75,13 +81,16 @@ def update_sale(credentials: Annotated[HTTPAuthorizationCredentials, Depends(sec
     description="Removes specific sale")
 def remove_sale(id: int = Path(ge=1), credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
-    element = saleRepository(db).get_sale(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = saleRepository(db).get_sale(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested sale was not found",
             "data": None
         }, status_code=404)
-    saleRepository(db).delete_sale(id)
+    saleRepository(db).delete_sale(id, branch)
     return JSONResponse(content={
         "message": "The sale was removed successfully",
         "data": None

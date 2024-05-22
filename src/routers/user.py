@@ -20,7 +20,10 @@ user_router = APIRouter()
     description="Returns all user ")
 def get_all_users(credentials: HTTPAuthorizationCredentials = Security(security)) -> List[User]:
     db = SessionLocal()
-    result = UserRepository(db).get_all_Users()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    result = UserRepository(db).get_all_Users(branch)
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
 
 @user_router.get('/{id}',
@@ -29,7 +32,10 @@ def get_all_users(credentials: HTTPAuthorizationCredentials = Security(security)
     description="Returns data of one specific user")
 def get_user_by_id(id: str,credentials: HTTPAuthorizationCredentials = Security(security)) -> User:
     db = SessionLocal()
-    element = UserRepository(db).get_User(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = UserRepository(db).get_user(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested user was not found",
@@ -60,13 +66,16 @@ def update_user(credentials: Annotated[HTTPAuthorizationCredentials, Depends(sec
     description="Removes specific user")
 def remove_user(id: int = Path(ge=1), credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
-    element = UserRepository(db).get_user(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = UserRepository(db).get_user(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested user was not found",
             "data": None
         }, status_code=404)
-    UserRepository(db).remove_user(id)
+    UserRepository(db).remove_user(id, branch)
     return JSONResponse(content={
         "message": "The user was removed successfully",
         "data": None

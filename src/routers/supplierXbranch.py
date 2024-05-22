@@ -20,7 +20,10 @@ supplierXbranch_router = APIRouter()
     description="Returns all supplierXbranch ")
 def get_all_supplierXbranchs(credentials: HTTPAuthorizationCredentials = Security(security)) -> List[SupplierXBranch]:
     db = SessionLocal()
-    result = supplierXbranchRepository(db).get_all_supplierXbranchs()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    result = supplierXbranchRepository(db).get_all_supplierXbranchs(branch)
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
 
 @supplierXbranch_router.get('/{id}',
@@ -29,7 +32,10 @@ def get_all_supplierXbranchs(credentials: HTTPAuthorizationCredentials = Securit
     description="Returns data of one specific supplierXbranch")
 def get_supplierXbranch_by_id(id: int = Path(ge=0, le=5000), credentials: HTTPAuthorizationCredentials = Security(security)) -> SupplierXBranch:
     db = SessionLocal()
-    element = supplierXbranchRepository(db).get_supplierXbranch(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = supplierXbranchRepository(db).get_supplierXbranch(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested supplierXbranch was not found",
@@ -75,13 +81,16 @@ def update_supplier(credentials: Annotated[HTTPAuthorizationCredentials, Depends
     description="Removes specific supplierXbranch")
 def remove_supplierXbranch(id: int = Path(ge=1), credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
-    element = supplierXbranchRepository(db).get_supplierXbranch(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = supplierXbranchRepository(db).get_supplierXbranch(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested supplierXbranch was not found",
             "data": None
         }, status_code=404)
-    supplierXbranchRepository(db).delete_supplierXbranch(id)
+    supplierXbranchRepository(db).delete_supplierXbranch(id, branch)
     return JSONResponse(content={
         "message": "The supplierXbranch was removed successfully",
         "data": None

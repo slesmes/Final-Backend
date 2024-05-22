@@ -8,12 +8,12 @@ class supplierXbranchRepository():
     def __init__(self, db) -> None:
         self.db = db
 
-    def get_all_supplierXbranchs(self) -> List[SupplierXBranch]:
-        query = self.db.query(supplierXbranchModel)
+    def get_all_supplierXbranchs(self, branch:int) -> List[SupplierXBranch]:
+        query = self.db.query(supplierXbranchModel).filter(supplierXbranchModel.id_branch == branch)
         return query.all()
 
-    def get_supplierXbranch(self, id: int ) -> SupplierXBranch:
-        element = self.db.query(supplierXbranchModel).filter(supplierXbranchModel.id == id).first()
+    def get_supplierXbranch(self, id: int, branch:int ) -> SupplierXBranch:
+        element = self.db.query(supplierXbranchModel).filter(supplierXbranchModel.id == id, supplierXbranchModel.id_branch == branch).first()
         return element
     
     def create_supplierXbranch(self, supplierXbranch: SupplierXBranch) -> dict:
@@ -36,8 +36,8 @@ class supplierXbranchRepository():
         return UpdatesupplierXbranch
 
 
-    def delete_supplierXbranch(self, id: int) -> dict:
-        element: SupplierXBranch = self.db.query(supplierXbranchModel).filter(supplierXbranchModel.id == id).first()
+    def delete_supplierXbranch(self, id: int, branch:int) -> dict:
+        element: SupplierXBranch = self.db.query(supplierXbranchModel).filter(supplierXbranchModel.id == id, supplierXbranchModel.id_branch == branch).first()
         self.db.delete(element)
         self.db.commit()
         return element  

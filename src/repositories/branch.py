@@ -9,12 +9,12 @@ class branchRepository():
     def __init__(self, db) -> None:
         self.db = db
 
-    def get_all_branchs(self) -> List[Branch]:
-        query = self.db.query(branchModel)
+    def get_all_branchs(self, company: str) -> List[Branch]:
+        query = self.db.query(branchModel).filter(branchModel.id_company == company)
         return query.all()
 
-    def get_branch(self, id: int ) -> Branch:
-        element = self.db.query(branchModel).filter(branchModel.id == id).first()
+    def get_branch(self, id: int, company:str ) -> Branch:
+        element = self.db.query(branchModel).filter(branchModel.id == id, branchModel.id_company == company).first()
         return element
     
     def update_branch(self, id:int, branch:Branch)-> dict:
@@ -40,8 +40,8 @@ class branchRepository():
         self.db.refresh(new_branch)
         return new_branch
     
-    def delete_branch(self, id: int) -> dict:
-        element: Branch = self.db.query(branchModel).filter(branchModel.id == id).first()
+    def delete_branch(self, id: int, company:str) -> dict:
+        element: Branch = self.db.query(branchModel).filter(branchModel.id == id, branchModel.id_company == company).first()
         self.db.delete(element)
         self.db.commit()
         return element  

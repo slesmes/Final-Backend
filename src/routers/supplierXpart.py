@@ -8,6 +8,7 @@ from src.models.supplierXpart import Supplierxpart as supplierXpartModel
 from fastapi.encoders import jsonable_encoder
 from src.repositories.supplierXpart import supplierXpartRepository
 from src.auth.has_access import security
+from src.auth import auth_handler
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import APIRouter, Body, Depends, Query, Path, Security, status
 supplierXpart_router = APIRouter()
@@ -19,7 +20,10 @@ supplierXpart_router = APIRouter()
     description="Returns all supplierXpart ")
 def get_all_supplierXparts(credentials: HTTPAuthorizationCredentials = Security(security)) -> List[SupplierXpart]:
     db = SessionLocal()
-    result = supplierXpartRepository(db).get_all_supplierXparts()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    result = supplierXpartRepository(db).get_all_supplierXparts(branch)
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
 
 @supplierXpart_router.get('/{id}',
@@ -28,7 +32,10 @@ def get_all_supplierXparts(credentials: HTTPAuthorizationCredentials = Security(
     description="Returns data of one specific supplierXpart")
 def get_supplierXpart_by_id(id: int = Path(ge=0, le=5000), credentials: HTTPAuthorizationCredentials = Security(security)) -> SupplierXpart:
     db = SessionLocal()
-    element = supplierXpartRepository(db).get_supplierXpart(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = supplierXpartRepository(db).get_supplierXpart(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested supplierXpart was not found",
@@ -70,13 +77,16 @@ def update_supplierXpart(credentials: Annotated[HTTPAuthorizationCredentials, De
     description="Removes specific supplierXpart")
 def remove_supplierXpart(id: int = Path(ge=1), credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
-    element = supplierXpartRepository(db).get_supplierXpart(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = supplierXpartRepository(db).get_supplierXpart(id,branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested supplierXpart was not found",
             "data": None
         }, status_code=404)
-    supplierXpartRepository(db).remove_supplierXpart(id)
+    supplierXpartRepository(db).remove_supplierXpart(id, branch)
     return JSONResponse(content={
         "message": "The supplierXpart was removed successfully",
         "data": None

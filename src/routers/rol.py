@@ -22,9 +22,8 @@ def get_all_rols(credentials: HTTPAuthorizationCredentials = Security(security))
     db = SessionLocal()
     token = credentials.credentials
     payload = auth_handler.decode_token(token=token)
-    print(payload)
-    print(payload.get("user.branch"))
-    result = rolRepository(db).get_all_rols()
+    branch = payload.get("user.branch")
+    result = rolRepository(db).get_all_rols(branch)
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
 
 @rol_router.get('/{id}',
@@ -35,7 +34,9 @@ def get_rol_by_id(id: int = Path(ge=0, le=5000), credentials: HTTPAuthorizationC
     db = SessionLocal()
     token = credentials.credentials
     payload = auth_handler.decode_token(token=token)
-    element = rolRepository(db).get_rol(id)
+    branch = payload.get("user.branch")
+
+    element = rolRepository(db).get_rol(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested rol was not found",
@@ -83,13 +84,16 @@ def update_rol(credentials: Annotated[HTTPAuthorizationCredentials, Depends(secu
     description="Removes specific rol")
 def remove_rol(id: int = Path(ge=1), credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
-    element = rolRepository(db).get_rol(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = rolRepository(db).get_rol(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested rol was not found",
             "data": None
         }, status_code=404)
-    rolRepository(db).delete_rol(id)
+    rolRepository(db).delete_rol(id, branch)
     return JSONResponse(content={
         "message": "The rol was removed successfully",
         "data": None

@@ -8,12 +8,12 @@ class billRepository():
     def __init__(self, db) -> None:
         self.db = db
 
-    def get_all_bills(self) -> List[Bill]:
-        query = self.db.query(billModel)
+    def get_all_bills(self, branch: int) -> List[Bill]:
+        query = self.db.query(billModel).filter(billModel.id == branch )
         return query.all()
 
-    def get_bill(self, id: int ) -> Bill:
-        element = self.db.query(billModel).filter(billModel.id == id).first()
+    def get_bill(self, id: int, branch: int ) -> Bill:
+        element = self.db.query(billModel).filter(billModel.id == id, billModel.id_branch == branch).first()
         return element
     
     def update_bill(self, id:int, bill:Bill)-> dict:
@@ -39,8 +39,8 @@ class billRepository():
         self.db.refresh(new_bill)
         return new_bill
     
-    def delete_bill(self, id: int) -> dict:
-        element: Bill = self.db.query(billModel).filter(billModel.id == id).first()
+    def delete_bill(self, id: int, branch: int) -> dict:
+        element: Bill = self.db.query(billModel).filter(billModel.id == id, billModel.id_branch == branch).first()
         self.db.delete(element)
         self.db.commit()
         return element  

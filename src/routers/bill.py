@@ -22,7 +22,10 @@ bill_router = APIRouter()
     description="Returns all bill ")
 def get_all_bills(credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)]) -> List[Bill]:
     db = SessionLocal()
-    result = billRepository(db).get_all_bills()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    result = billRepository(db).get_all_bills(branch)
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
 
 @bill_router.get('/{id}',
@@ -31,7 +34,10 @@ def get_all_bills(credentials: Annotated[HTTPAuthorizationCredentials, Depends(s
     description="Returns data of one specific bill")
 def get_bill_by_id(credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)],id: int = Path(ge=0, le=5000)) -> Bill:
     db = SessionLocal()
-    element = billRepository(db).get_bill(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = billRepository(db).get_bill(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested bill was not found",
@@ -78,13 +84,16 @@ def update_bill(credentials: Annotated[HTTPAuthorizationCredentials, Depends(sec
     description="Removes specific bill")
 def remove_bill(credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)],id: int = Path(ge=1)) -> dict:
     db = SessionLocal()
-    element = billRepository(db).get_bill(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = billRepository(db).get_bill(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested bill was not found",
             "data": None
         }, status_code=404)
-    billRepository(db).delete_bill(id)
+    billRepository(db).delete_bill(id, branch)
     return JSONResponse(content={
         "message": "The bill was removed successfully",
         "data": None

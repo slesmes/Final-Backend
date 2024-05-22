@@ -8,12 +8,12 @@ class clientRepository():
     def __init__(self, db) -> None:
         self.db = db
 
-    def get_all_clients(self) -> List[Client]:
-        query = self.db.query(clientModel)
+    def get_all_clients(self, company:str) -> List[Client]:
+        query = self.db.query(clientModel).filter(clientModel.id_company == company)
         return query.all()
 
-    def get_client(self, id: int ) -> Client:
-        element = self.db.query(clientModel).filter(clientModel.id == id).first()
+    def get_client(self, id: int, company:str ) -> Client:
+        element = self.db.query(clientModel).filter(clientModel.id == id, clientModel.id_company == company).first()
         return element
     
     def create_client(self, client: Client) -> dict:
@@ -41,8 +41,8 @@ class clientRepository():
         self.db.refresh(Updateclient)
         return Updateclient
     
-    def delete_client(self, id: int) -> dict:
-        element: Client = self.db.query(clientModel).filter(clientModel.id == id).first()
+    def delete_client(self, id: int, company:str) -> dict:
+        element: Client = self.db.query(clientModel).filter(clientModel.id == id, clientModel.id_company  == company).first()
         self.db.delete(element)
         self.db.commit()
         return element  

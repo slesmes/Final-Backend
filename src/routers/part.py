@@ -8,6 +8,7 @@ from src.models.part import Part as partModel
 from fastapi.encoders import jsonable_encoder
 from src.repositories.part import partRepository
 from src.auth.has_access import security
+from src.auth import auth_handler
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import APIRouter, Body, Depends, Query, Path, Security, status
 part_router = APIRouter()
@@ -19,7 +20,10 @@ part_router = APIRouter()
     description="Returns all part ")
 def get_all_parts(credentials: HTTPAuthorizationCredentials = Security(security)) -> List[Part]:
     db = SessionLocal()
-    result = partRepository(db).get_all_parts()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    result = partRepository(db).get_all_parts(branch)
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
 
 @part_router.get('/{id}',
@@ -28,7 +32,10 @@ def get_all_parts(credentials: HTTPAuthorizationCredentials = Security(security)
     description="Returns data of one specific part")
 def get_part_by_id(id: int = Path(ge=0, le=5000), credentials: HTTPAuthorizationCredentials = Security(security)) -> Part:
     db = SessionLocal()
-    element = partRepository(db).get_part(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = partRepository(db).get_part(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested part was not found",
@@ -71,13 +78,16 @@ def update_part(credentials: Annotated[HTTPAuthorizationCredentials, Depends(sec
     description="Removes specific part")
 def remove_part(id: int = Path(ge=1), credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
-    element = partRepository(db).get_part(id)
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    branch = payload.get("user.branch")
+    element = partRepository(db).get_part(id, branch)
     if not element:
         return JSONResponse(content={
             "message": "The requested part was not found",
             "data": None
         }, status_code=404)
-    partRepository(db).delete_part(id)
+    partRepository(db).delete_part(id, branch)
     return JSONResponse(content={
         "message": "The part was removed successfully",
         "data": None
