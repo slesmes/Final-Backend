@@ -4,7 +4,7 @@ from fastapi import HTTPException, status
 
 class Country(BaseModel):
 
-    id: int = Field(default=None, title="Country ID")
+    id: int = Field( title="Country ID")
     name: str = Field(default=None, title="Country Name")
 
     class Config:

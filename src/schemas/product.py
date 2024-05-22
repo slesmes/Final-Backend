@@ -4,13 +4,13 @@ from fastapi import HTTPException, status
 
 class Product(BaseModel):
 
-    id: int = Field(default=None, title="Product ID")
+    id: int = Field( title="Product ID")
     name: str = Field(default=None, title="Product name")
     price: int = Field(default=None, tittle="Product price")
     quantity: int = Field(default=None, title="Product quantity")
     description: str = Field(default=None, title="Product description")
-    id_category: int = Field(default=None, title="ID of the category")
-    id_branch: int = Field(default=None, tittle="ID of the branch")
+    id_category: int = Field(title="ID of the category")
+    id_branch: int = Field(tittle="ID of the branch")
     status: bool = Field(default=True, title="Product status")
     disccount: float = Field(default=None, title="Product disccount")
 

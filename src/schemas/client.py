@@ -4,15 +4,15 @@ from fastapi import HTTPException, status
 
 class Client(BaseModel):
 
-    identification: str = Field(default=None, title="Client identification")
+    identification: str = Field( title="Client identification")
     name: str = Field(default=None, title="Client Name")
     lastname: str = Field(default=None, title="Client lastname")
     status: bool = Field(default=True, title="Client Status")
     email: str = Field(default=None, title="Client email")
     phone: str = Field(default=None, title="Client Phone")
-    id_company: int = Field(default=None, title="ID of the company")
+    id_company: int = Field( title="ID of the company")
     address: str = Field(default=None, title="Client address")
-    id_city: int = Field(default=None, title="ID of the city")
+    id_city: int = Field(title="ID of the city")
 
     class Config:
         json_schema_extra = {

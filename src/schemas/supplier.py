@@ -4,7 +4,7 @@ from fastapi import HTTPException, status
 
 class Supplier(BaseModel):
 
-    id: int = Field(default=None, title="Supplier ID")
+    id: int = Field( title="Supplier ID")
     name: str = Field(default=None, title="Supplier name")
     name_seller: str = Field(default=None, tittle="the name of the person that represent a Supplier")
     status: bool = Field(default=True, title="Supplier status")

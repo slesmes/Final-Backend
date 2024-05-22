@@ -42,3 +42,4 @@ class categoryRepository():
         self.db.delete(element)
         self.db.commit()
         return element  
+    

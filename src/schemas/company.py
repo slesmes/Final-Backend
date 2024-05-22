@@ -4,9 +4,9 @@ from fastapi import HTTPException, status
 
 class Company(BaseModel):
 
-    nit: int = Field(default=None, title="Company Nit")
+    nit: int = Field( title="Company Nit")
     name: str = Field(default=None, title="Company Name")
-    id_city: int = Field(default=None, title="Department ID")
+    id_city: int = Field( title="Department ID")
     address: str = Field(default=None, tittle="Adress of the company")
     phone: str = Field(default=None, tittle="Phone of the company")
     status: bool = Field(default=True, title="Status of the company")
