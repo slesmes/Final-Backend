@@ -14,7 +14,6 @@ class Category(BaseModel):
         json_schema_extra = {
             "example": {
                 "name": "Example Category",
-                "description": "This is an example category",
-                "id_branch": "company_id"
+                "description": "This is an example category"
             }
         }

@@ -6,6 +6,7 @@ from typing import Annotated, Any, Optional, List
 from src.config.database import SessionLocal
 from src.models.sale import Sale as saleModel
 from fastapi.encoders import jsonable_encoder
+from src.auth import auth_handler
 from src.repositories.sale import saleRepository
 from src.auth.has_access import security
 from fastapi.security import HTTPAuthorizationCredentials
@@ -43,6 +44,9 @@ def get_sale_by_id(id: int = Path(ge=0, le=5000), credentials: HTTPAuthorization
     description="Creates a new sale")
 def create_sale(sale: Sale, credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    sale.id_branch = payload.get("user.branch")
     new_sale = saleRepository(db).create_sale(sale)
     return JSONResponse(content={
         "message": "The sale was successfully created",

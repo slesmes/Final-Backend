@@ -22,7 +22,6 @@ class Product(BaseModel):
                 "quantity": 240,
                 "description": "Example of description",
                 "id_category": 1,
-                "id_branch": 1,
                 "id_status": "true or false",
                 "id_supplier": 1,
             }

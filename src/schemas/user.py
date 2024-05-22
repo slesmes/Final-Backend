@@ -39,7 +39,7 @@ class LoginUser(BaseModel):
     class Config:
         json_schema_extra = {
             "example": {
-                "username": "Example username",
-                "password": "Example password"
+                "username": "andre1438",
+                "password": "hola123"
             }
         }

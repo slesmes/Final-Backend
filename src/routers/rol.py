@@ -8,6 +8,7 @@ from src.models.rol import Rol as rolModel
 from fastapi.encoders import jsonable_encoder
 from src.repositories.rol import rolRepository
 from src.auth.has_access import security
+from src.auth import auth_handler
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import APIRouter, Body, Depends, Query, Path, Security, status
 rol_router = APIRouter()
@@ -19,6 +20,10 @@ rol_router = APIRouter()
     description="Returns all rol ")
 def get_all_rols(credentials: HTTPAuthorizationCredentials = Security(security)) -> List[Rol]:
     db = SessionLocal()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    print(payload)
+    print(payload.get("user.branch"))
     result = rolRepository(db).get_all_rols()
     return JSONResponse(content=jsonable_encoder(result),status_code=200)
 
@@ -28,6 +33,8 @@ def get_all_rols(credentials: HTTPAuthorizationCredentials = Security(security))
     description="Returns data of one specific rol")
 def get_rol_by_id(id: int = Path(ge=0, le=5000), credentials: HTTPAuthorizationCredentials = Security(security)) -> Rol:
     db = SessionLocal()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
     element = rolRepository(db).get_rol(id)
     if not element:
         return JSONResponse(content={
@@ -43,7 +50,12 @@ def get_rol_by_id(id: int = Path(ge=0, le=5000), credentials: HTTPAuthorizationC
     description="Creates a new rol")
 def create_rol(rol: Rol, credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    rol.id_branch = payload.get("user.branch")
     new_rol = rolRepository(db).create_rol(rol)
+
+
     return JSONResponse(content={
         "message": "The rol was successfully created",
         "data": jsonable_encoder(new_rol)

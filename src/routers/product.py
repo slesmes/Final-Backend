@@ -8,6 +8,7 @@ from src.models.product import Product as productModel
 from fastapi.encoders import jsonable_encoder
 from src.repositories.product import productRepository
 from src.auth.has_access import security
+from src.auth import auth_handler
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import APIRouter, Body, Depends, Query, Path, Security, status
 product_router = APIRouter()
@@ -43,6 +44,9 @@ def get_product_by_id(id: int = Path(ge=0, le=5000), credentials: HTTPAuthorizat
     description="Creates a new product")
 def create_product(product: Product, credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    product.id_branch = payload.get("user.branch")
     new_product = productRepository(db).create_product(product)
     return JSONResponse(content={
         "message": "The product was successfully created",

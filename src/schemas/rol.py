@@ -7,13 +7,12 @@ class Rol(BaseModel):
     id: int = Field(default=None, title="Rol ID")
     name: str = Field(default=None, title="Rol Name")
     description: str = Field(default=None, title="Rol Description")
-    id_branch: int = Field(default=None, title="ID of the branch")
+    id_branch: int = Field(default='', title="ID of the branch")
 
     class Config:
         json_schema_extra = {
             "example": {
                 "name": "Example Rol",
-                "description": "This is an example Rol",
-                "id_branch": 1
+                "description": "This is an example Rol"
             }
         }

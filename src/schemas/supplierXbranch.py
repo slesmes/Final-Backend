@@ -11,7 +11,6 @@ class SupplierXBranch(BaseModel):
     class Config:
         json_schema_extra = {
             "example": {
-                "id_supplier": 1,
-                "id_branch": 1,
+                "id_supplier": 1
             }
         }

@@ -8,6 +8,7 @@ from src.models.supplierXbranch import Supplierxbranch as supplierXbranchModel
 from fastapi.encoders import jsonable_encoder
 from src.repositories.supplierXbranch import supplierXbranchRepository
 from src.auth.has_access import security
+from src.auth import auth_handler
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import APIRouter, Body, Depends, Query, Path, Security, status
 supplierXbranch_router = APIRouter()
@@ -43,6 +44,9 @@ def get_supplierXbranch_by_id(id: int = Path(ge=0, le=5000), credentials: HTTPAu
     description="Creates a new supplierXbranch")
 def create_supplierXbranch(supplierXbranch: SupplierXBranch, credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    supplierXbranch.id_branch = payload.get("user.branch")
     new_supplierXbranch = supplierXbranchRepository(db).create_supplierXbranch(supplierXbranch)
     return JSONResponse(content={
         "message": "The supplierXbranch was successfully created",

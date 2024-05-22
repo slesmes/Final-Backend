@@ -14,11 +14,9 @@ class Bill(BaseModel):
     class Config:
         json_schema_extra = {
             "example": {
-                "date_bill": "Example date of the bill",
-                "id_client": 1,
-                "status": "true or false",
-                "id_user": 1,
-                "id_branch": 1,
+                "date_bill": "2023-12-05",
+                "id_client": "123456",
+                "status":True
             }
         }
 

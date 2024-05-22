@@ -35,18 +35,18 @@ class AuthRepository:
         db = SessionLocal()
         check_user = UserRepository(db).get_user(username=user.username)
         if check_user is None:
-            return HTTPException(
+            raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid credentials (1)",
             )
 
         if not check_user.status:
-            return HTTPException(
+            raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="The user is not allowed to log in",
             )
         if not auth_handler.verify_password(user.password, check_user.password):
-            return HTTPException(
+            raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid credentials (2)",
             )

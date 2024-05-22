@@ -8,6 +8,7 @@ from src.models.category import Category as categoryModel
 from fastapi.encoders import jsonable_encoder
 from src.repositories.category import categoryRepository
 from src.auth.has_access import security
+from src.auth import auth_handler
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import APIRouter, Body, Depends, Query, Path, Security, status
 category_router = APIRouter()
@@ -43,6 +44,9 @@ def get_category_by_id(id: int = Path(ge=0, le=5000),credentials: HTTPAuthorizat
     description="Creates a new category")
 def create_category(category: Category,credentials: HTTPAuthorizationCredentials = Security(security)) -> dict:
     db = SessionLocal()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    category.id_branch = payload.get("user.branch")
     new_category = categoryRepository(db).create_category(category)
     return JSONResponse(content={
         "message": "The category was successfully created",

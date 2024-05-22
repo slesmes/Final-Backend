@@ -8,6 +8,7 @@ from src.models.bill import Bill as billModel
 from fastapi.encoders import jsonable_encoder
 from src.repositories.bill import billRepository
 from src.auth.has_access import security
+from src.auth import auth_handler
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi import APIRouter, Body, Depends, Query, Path, Security, status
 from typing import Annotated
@@ -46,6 +47,10 @@ def get_bill_by_id(credentials: Annotated[HTTPAuthorizationCredentials, Depends(
     description="Creates a new bill")
 def create_bill(bill: Bill, credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)]) -> dict:
     db = SessionLocal()
+    token = credentials.credentials
+    payload = auth_handler.decode_token(token=token)
+    bill.id_branch = payload.get("user.branch")
+    bill.id_user = payload.get("user.id")
     new_bill = billRepository(db).create_bill(bill)
     return JSONResponse(content={
         "message": "The bill was successfully created",

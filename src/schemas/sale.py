@@ -16,7 +16,6 @@ class Sale(BaseModel):
             "example": {
                 "id_product": 1,
                 "id_bill": 1,
-                "quantity": 240,
-                "id_branch": 1
+                "quantity": 240
             }
         }
