@@ -4,6 +4,7 @@ from fastapi import HTTPException
 from src.schemas.branch import Branch
 from src.models.branch import Branch as branchModel
 
+
 class branchRepository():
     def __init__(self, db) -> None:
         self.db = db

@@ -13,8 +13,8 @@ class UserRepository():
         query = self.db.query(UserModel)
         return query.all()
     
-    def get_User(self, id: int) -> User:
-        element = self.db.query(UserModel).filter(UserModel.id == id).first()
+    def get_User(self, id: str) -> User:
+        element = self.db.query(UserModel).filter(UserModel.identification == id).first()
         return element
     
     def get_user(self, username: str) -> User:
@@ -49,4 +49,8 @@ class UserRepository():
         element: User = self.db.query(UserModel).filter(UserModel.id == id).first()
         self.db.delete(element)
         self.db.commit()
-        return element    
+        return element
+
+    def get_all_Users_by_branch(self, id_branch: int) -> List[User]:
+        query = self.db.query(UserModel).filter(UserModel.id_branch == id_branch)
+        return query.all()    
