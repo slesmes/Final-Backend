@@ -1,4 +1,13 @@
 # Final-Backend
+#Integrantes:
+| Nombre                         | Correo                            | 
+|--------------------------------|-----------------------------------|
+| Santiago Lesmes Marin          | santiago.slesmes@autonoma.edu.co  | 
+| Asdrubal Andres Perez Ascanio  | asdrubala.pereza@autonoma.edu.co  | 
+| María José Muñoz Posada        | mariaj.munozp@autonoma.edu.co     | 
+
+#Descripción:
+Nuestro proyecto consiste en un sistema que nos ayuda a administrar y gestionar  todos los usuarios, productos, provedores y sedes de una compañia   
 
 # API Endpoints Documentation
 
@@ -164,5 +173,3 @@
 | GET     | /api/v1/supplierxpart/     | Obtener todos los proveedores por parte |
 | POST    | /api/v1/supplierxpart/     | Crear un proveedor por parte |
 | GET     | /api/v1/supplierxpart
-
-
