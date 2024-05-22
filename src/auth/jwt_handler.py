@@ -5,8 +5,9 @@ from datetime import datetime, timezone, timedelta
 from sqlalchemy.orm import Session
 from src.repositories.user import UserRepository
 from src.models.user import User
+from src.config.database import SessionLocal
 from src.repositories.branch import branchRepository
-from src.models.branch import Branch
+from src.repositories.branch import branchRepository
 from src.config.database import SessionLocal
 import json
 
@@ -24,11 +25,10 @@ class JWTHandler:
         return bcrypt.checkpw(password=password.encode("utf-8"), hashed_password=hashed_password.encode("utf-8"),)
     
     def encode_token(self, user):
-        from src.routers.branch import get_branch_by_id
+        db = SessionLocal()
         id_branch = user.id_branch
-        branch = get_branch_by_id(id_branch)
-        json_string = branch.body.decode('utf-8')
-        company = json.loads(json_string)["id_company"]
+        element = branchRepository(db).get_branch_company(id_branch)
+        print(element)
         payload = {
             # exp (expiration time): Time after which the JWT expires
             "exp": datetime.now(tz=timezone.utc) + timedelta(hours=1),
@@ -42,7 +42,7 @@ class JWTHandler:
             "user.rol": user.id_rol,
             "user.email": user.email,
             "user.id": user.identification,
-            "user.company": company
+            "user.company": element.id_company
         }
         print(payload)
         return jwt.encode(payload, self.secret, algorithm=self.algorithm)

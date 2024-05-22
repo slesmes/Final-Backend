@@ -16,6 +16,10 @@ class branchRepository():
     def get_branch(self, id: int, company:str ) -> Branch:
         element = self.db.query(branchModel).filter(branchModel.id == id, branchModel.id_company == company).first()
         return element
+
+    def get_branch_company(self, id: int) -> Branch:
+        element = self.db.query(branchModel).filter(branchModel.id == id).first()
+        return element
     
     def update_branch(self, id:int, branch:Branch)-> dict:
         Updatebranch: Branch= self.db.query(branchModel).filter(branchModel.id == id, branchModel.id_company == branch.id_company).first()  
