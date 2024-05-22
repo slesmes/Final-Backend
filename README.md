@@ -163,6 +163,10 @@
 |---------|----------------------------|-----------------------|
 | GET     | /api/v1/supplierxpart/     | Obtener todos los proveedores por parte |
 | POST    | /api/v1/supplierxpart/     | Crear un proveedor por parte |
+<<<<<<< Updated upstream
 | GET     | /api/v1/supplierxpart
 
 
+=======
+| GET     | /api/v1/supplierxpart
+>>>>>>> Stashed changes
